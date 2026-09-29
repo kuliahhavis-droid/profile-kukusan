@@ -11,6 +11,7 @@ interface LocationData {
   openingHours: string;
   phone: string;
   mapsEmbedUrl: string;
+  whatsappNumber?: string;
 }
 
 export default function LocationSection({ location }: { location: LocationData }) {
@@ -34,7 +35,7 @@ export default function LocationSection({ location }: { location: LocationData }
             Lokasi & Jam Operasional
           </h2>
           <p className="text-sm text-brown font-normal">
-            Ketapang Kost 2, Dukuhwaluh, Kembaran, Banyumas (Dekat Kampus UMP 1)
+            {location.address}
           </p>
         </ScrollReveal>
 
@@ -82,10 +83,10 @@ export default function LocationSection({ location }: { location: LocationData }
                     </h4>
                     <p className="text-xs text-darkbrown font-semibold mt-0.5">Ketapang Kost 2</p>
                     <p className="text-xs text-brown mt-0.5 leading-relaxed">
-                      Plus Code: <strong className="text-darkbrown">{activeTab === "weekday" ? "H7QG+945" : "H7QF+33X"}</strong>, Dukuhwaluh
+                      {activeTab === "weekday" ? location.weekdayLocation || location.address : location.weekendLocation || location.address}
                     </p>
                     <a
-                      href={activeTab === "weekday" ? weekdayMapsUrl : weekendMapsUrl}
+                      href={location.mapsEmbedUrl || (activeTab === "weekday" ? weekdayMapsUrl : weekendMapsUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs font-bold text-brandgreen hover:underline mt-2"
@@ -104,7 +105,7 @@ export default function LocationSection({ location }: { location: LocationData }
                 </div>
                 <div>
                   <h4 className="font-bold text-xs sm:text-sm text-darkbrown">Jam Buka</h4>
-                  <p className="text-xs text-darkbrown font-semibold mt-0.5">06.00 WIB - Habis</p>
+                  <p className="text-xs text-darkbrown font-semibold mt-0.5">{location.openingHours}</p>
                 </div>
               </div>
 
@@ -115,14 +116,14 @@ export default function LocationSection({ location }: { location: LocationData }
                 </div>
                 <div>
                   <h4 className="font-bold text-xs sm:text-sm text-darkbrown">Pemesanan WhatsApp</h4>
-                  <p className="text-xs text-darkbrown font-bold mt-0.5">08818584749</p>
+                  <p className="text-xs text-darkbrown font-bold mt-0.5">{location.phone}</p>
                 </div>
               </div>
             </div>
 
             {/* Direct WA Action */}
             <a
-              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628818584749"}?text=Halo%20Kukusan%20Gen%20Z!%20%F0%9F%8C%BF%20Saya%20mau%20pesan%20antar%20ke%20area%20Kampus%20UMP%201%20%2F%20Dukuhwaluh.%20Boleh%20minta%20info%20menu%20yang%20ready%20kak%3F`}
+              href={`https://wa.me/${location.whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628818584749"}?text=Halo%20Kukusan%20Gen%20Z!%20%F0%9F%8C%BF%20Saya%20mau%20pesan%20antar%20ke%20area%20Kampus%20UMP%201%20%2F%20Dukuhwaluh.%20Boleh%20minta%20info%20menu%20yang%20ready%20kak%3F`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 w-full py-3 bg-brandgreen hover:bg-brandgreen-hover text-white font-bold text-xs sm:text-sm rounded-xl shadow-soft hover:shadow-warm transition-all hover:scale-[1.01] active:scale-95"
@@ -136,7 +137,7 @@ export default function LocationSection({ location }: { location: LocationData }
           <ScrollReveal direction="right" distance={25} delay={0.2} className="lg:col-span-7 flex flex-col">
             <div className="w-full h-72 sm:h-80 lg:h-full min-h-[300px] rounded-2xl overflow-hidden shadow-warm border border-brown/15 bg-white relative">
               <iframe
-                src={activeTab === "weekday" ? weekdayEmbed : weekendEmbed}
+                src={location.mapsEmbedUrl || (activeTab === "weekday" ? weekdayEmbed : weekendEmbed)}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

@@ -41,6 +41,9 @@ export default async function HomePage() {
 
   const advantagesData = siteContent?.advantages || [];
   const testimonialsData = siteContent?.testimonials || [];
+  const identityData = siteContent?.identity || {};
+  const heroWithIdentity = { ...heroData, whatsappNumber: identityData.whatsappNumber };
+  const locationWithIdentity = { ...locationData, whatsappNumber: identityData.whatsappNumber };
   const locationData = siteContent?.location || {
     address: "Ketapang Kost 2, Dusun III, Dukuhwaluh, Kec. Kembaran, Kabupaten Banyumas, Jawa Tengah (Buka Pagi 06.00 - Habis | Siap Antar UMP 1)",
     weekdayLocation: "H7QG+945, Dusun III, Dukuhwaluh, Kec. Kembaran, Kabupaten Banyumas, Jawa Tengah (di depan Lare Cost_Food Corner)",
@@ -52,15 +55,15 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Navbar identity={identityData} />
 
       <main className="flex-1">
-        <HeroSection hero={heroData} />
+        <HeroSection hero={heroWithIdentity} />
         <ProductCatalog initialProducts={products} categories={categories} />
         <AdvantagesSection advantages={advantagesData} />
         <AboutUsSection about={aboutData} />
         <TestimonialsSection testimonials={testimonialsData} />
-        <LocationSection location={locationData} />
+        <LocationSection location={locationWithIdentity} />
       </main>
 
       <Footer />

@@ -267,6 +267,10 @@ export async function getSiteContent(key?: string): Promise<any> {
 }
 
 export async function updateSiteContent(sectionKey: string, data: any): Promise<any> {
+  if (!db && process.env.NODE_ENV === "production") {
+    throw new Error("Database belum dikonfigurasi. Tambahkan DATABASE_URL di environment Vercel lalu deploy ulang.");
+  }
+
   // Merge with existing data
   const existingData = await getSiteContent(sectionKey);
   const mergedData = existingData ? { ...existingData, ...data } : data;
@@ -288,6 +292,7 @@ export async function updateSiteContent(sectionKey: string, data: any): Promise<
           target: schema.siteContent.key,
           set: {
             data: mergedData,
+            updatedAt: new Date(),
           },
         });
       console.log(`✅ DB: Updated site_content[${sectionKey}]`);

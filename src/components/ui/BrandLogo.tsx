@@ -6,12 +6,16 @@ interface BrandLogoProps {
   className?: string;
   showTagline?: boolean;
   variant?: "default" | "light";
+  brandName?: string;
+  tagline?: string;
 }
 
 export default function BrandLogo({
   className = "",
   showTagline = false,
   variant = "default",
+  brandName = "Kukusan Gen Z",
+  tagline = "Kukusan Sehat, Rasa Hebat",
 }: BrandLogoProps) {
   const isLight = variant === "light";
 
@@ -32,10 +36,7 @@ export default function BrandLogo({
             isLight ? "text-white" : "text-darkbrown"
           }`}
         >
-          <span>KUKUSAN</span>
-          <span className={isLight ? "text-[#5AC66D]" : "text-brandgreen"}>
-            GEN Z
-          </span>
+          <span>{brandName}</span>
         </div>
         {showTagline && (
           <span
@@ -43,7 +44,7 @@ export default function BrandLogo({
               isLight ? "text-cream-200" : "text-brown"
             }`}
           >
-            Kukusan Sehat, Rasa Hebat
+            {tagline}
           </span>
         )}
       </div>

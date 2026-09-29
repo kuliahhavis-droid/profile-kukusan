@@ -44,8 +44,9 @@ export default function AboutUsSection({ about }: { about: AboutData }) {
                 Lapak & Cerita Kami
               </span>
               <h2 className="text-3xl sm:text-4xl font-black text-darkbrown tracking-tight leading-tight">
-                Aneka Kukusan Sehat Serba 2.000 di Ketapang Kost 2
+                {about.title}
               </h2>
+              <p className="text-sm text-brown leading-relaxed">{about.subtitle}</p>
             </div>
 
             <p className="text-sm text-brown leading-relaxed font-normal">

@@ -19,7 +19,7 @@ import {
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import CartDrawer from "./CartDrawer";
 
-export default function Navbar() {
+export default function Navbar({ identity }: { identity?: { brandName?: string; tagline?: string; whatsappNumber?: string } }) {
   const { totalItems, setIsOpen } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -75,7 +75,7 @@ export default function Navbar() {
         />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <BrandLogo showTagline={!isScrolled} />
+          <BrandLogo showTagline={!isScrolled} brandName={identity?.brandName} tagline={identity?.tagline} />
 
           {/* Desktop Nav - Minimalist Clean Pill */}
           <nav className="hidden md:flex items-center gap-1 bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-brown/10 shadow-soft">
@@ -108,7 +108,7 @@ export default function Navbar() {
 
             {/* Direct WhatsApp CTA Button */}
             <a
-              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628818584749"}?text=Halo%20Kukusan%20Gen%20Z!%20%F0%9F%8C%BF%20Saya%20mau%20pesan%20aneka%20kukusan%20sehat%20untuk%20area%20Kampus%20UMP%201%20%2F%20Ketapang%20Kost%202.`}
+              href={`https://wa.me/${identity?.whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628818584749"}?text=Halo%20Kukusan%20Gen%20Z!%20%F0%9F%8C%BF%20Saya%20mau%20pesan%20aneka%20kukusan%20sehat%20untuk%20area%20Kampus%20UMP%201%20%2F%20Ketapang%20Kost%202.`}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 bg-brandgreen hover:bg-brandgreen-hover text-white font-bold text-xs rounded-full shadow-soft transition-all hover:scale-[1.02] active:scale-95"
@@ -154,7 +154,7 @@ export default function Navbar() {
               >
                 {/* Drawer Header */}
                 <div className="p-5 bg-white/90 backdrop-blur-md border-b border-brown/10 flex items-center justify-between">
-                  <BrandLogo showTagline={false} />
+                  <BrandLogo showTagline={false} brandName={identity?.brandName} tagline={identity?.tagline} />
                   <button
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-8 h-8 rounded-full bg-cream-100 text-brown hover:text-darkbrown hover:bg-cream-200 flex items-center justify-center transition-all active:scale-95"
@@ -228,7 +228,7 @@ export default function Navbar() {
                   </button>
 
                   <a
-                    href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628818584749"}?text=Halo%20Kukusan%20Gen%20Z!%20%F0%9F%8C%BF%20Saya%20mau%20pesan%20aneka%20kukusan%20sehat%20area%20Kampus%20UMP%201.`}
+                    href={`https://wa.me/${identity?.whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628818584749"}?text=Halo%20Kukusan%20Gen%20Z!%20%F0%9F%8C%BF%20Saya%20mau%20pesan%20aneka%20kukusan%20sehat%20area%20Kampus%20UMP%201.`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full py-3 px-4 rounded-xl bg-brandgreen hover:bg-brandgreen-hover text-white font-bold text-xs flex items-center justify-center gap-2 shadow-soft transition-all active:scale-95"

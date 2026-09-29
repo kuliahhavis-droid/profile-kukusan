@@ -12,10 +12,11 @@ interface HeroData {
   ctaPrimaryText: string;
   ctaSecondaryText: string;
   heroImageUrl: string;
+  whatsappNumber?: string;
 }
 
 export default function HeroSection({ hero }: { hero: HeroData }) {
-  const waNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628818584749";
+  const waNumber = hero.whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628818584749";
 
   return (
     <section id="hero" className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 bg-cream-100 border-b border-brown/10 overflow-hidden">
@@ -36,7 +37,7 @@ export default function HeroSection({ hero }: { hero: HeroData }) {
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-brandgreen/20 text-brandgreen text-xs font-bold shadow-soft"
             >
               <span className="w-2 h-2 rounded-full bg-brandgreen animate-pulse" />
-              <span>Cemilan Kukus Sehat & Segar Dukuhwaluh</span>
+              <span>{hero.badgeText || "Cemilan Kukus Sehat & Segar Dukuhwaluh"}</span>
             </motion.div>
 
             {/* Editorial Headline */}
@@ -46,8 +47,7 @@ export default function HeroSection({ hero }: { hero: HeroData }) {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="text-3xl sm:text-4xl lg:text-5xl font-black text-darkbrown tracking-tight leading-[1.18]"
             >
-              Kukusan Hangat Alami, <br className="hidden sm:inline" />
-              <span className="text-brandgreen">Rasa Nikmat Setiap Hari.</span>
+              {hero.title}
             </motion.h1>
 
             {/* Subtitle */}
@@ -57,7 +57,7 @@ export default function HeroSection({ hero }: { hero: HeroData }) {
               transition={{ delay: 0.3, duration: 0.6 }}
               className="text-sm sm:text-base text-brown leading-relaxed max-w-xl mx-auto lg:mx-0 font-normal"
             >
-              Aneka kukusan sehat tanpa minyak: Pisang, Ubi Oren, Ubi Ungu, Kentang, Singkong, Talas, & Jagung. Serba <strong className="text-darkbrown font-semibold">Rp 2.000/pcs</strong> atau paket hemat <strong className="text-brandorange font-semibold">5K Dapet 3 Pcs!</strong>
+              {hero.subtitle}
             </motion.p>
 
             {/* CTA Action Buttons */}
@@ -74,7 +74,7 @@ export default function HeroSection({ hero }: { hero: HeroData }) {
                 className="w-full sm:w-auto px-6 py-3 bg-brandgreen hover:bg-brandgreen-hover text-white font-bold text-xs sm:text-sm rounded-xl shadow-soft hover:shadow-warm transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95"
               >
                 <PhoneCall className="w-4 h-4" />
-                <span>Order via WhatsApp</span>
+                <span>{hero.ctaPrimaryText || "Order via WhatsApp"}</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
 
@@ -82,7 +82,7 @@ export default function HeroSection({ hero }: { hero: HeroData }) {
                 href="#menu"
                 className="w-full sm:w-auto px-6 py-3 bg-white text-darkbrown border border-brown/20 font-semibold text-xs sm:text-sm rounded-xl hover:bg-cream-50 transition-all flex items-center justify-center gap-2 shadow-soft hover:scale-[1.02] active:scale-95"
               >
-                <span>Lihat Menu</span>
+                <span>{hero.ctaSecondaryText || "Lihat Menu"}</span>
               </a>
             </motion.div>
 
