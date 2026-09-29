@@ -24,7 +24,7 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-2 pt-1">
               <a
-                href="https://instagram.com/kukusangenz"
+                href="https://www.instagram.com/kukusangenz._?stkn=N2JhYW85bml3czJu"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center transition-all text-white hover:text-brandorange shadow-xs hover:scale-105"
@@ -33,7 +33,7 @@ export default function Footer() {
                 <Instagram className="w-4 h-4" />
               </a>
               <a
-                href="https://tiktok.com/@kukusangenz"
+                href="https://www.tiktok.com/@kukusangenz_?_r=1&_t=ZS-9A8P0eyM0If"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center transition-all text-white hover:text-brandorange shadow-xs hover:scale-105"

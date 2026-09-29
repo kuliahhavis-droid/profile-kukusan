@@ -27,8 +27,6 @@ export default function AdminContentCMSPage() {
   const [brandName, setBrandName] = useState("");
   const [tagline, setTagline] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState("");
-  const [instagramUrl, setInstagramUrl] = useState("");
-  const [tiktokUrl, setTiktokUrl] = useState("");
 
   // Location Fields
   const [address, setAddress] = useState("");
@@ -57,8 +55,6 @@ export default function AdminContentCMSPage() {
         setBrandName(c.identity.brandName || "");
         setTagline(c.identity.tagline || "");
         setWhatsappNumber(c.identity.whatsappNumber || "");
-        setInstagramUrl(c.identity.instagramUrl || "");
-        setTiktokUrl(c.identity.tiktokUrl || "");
       }
       if (c?.location) {
         setAddress(c.location.address || "");
@@ -129,8 +125,6 @@ export default function AdminContentCMSPage() {
       tagline,
       logoText: brandName,
       whatsappNumber,
-      instagramUrl,
-      tiktokUrl,
     });
     setSaving(false);
     if (res.success) {
@@ -314,27 +308,6 @@ export default function AdminContentCMSPage() {
                     />
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="font-bold text-darkbrown">Link Instagram (Opsional)</label>
-                    <input
-                      type="text"
-                      value={instagramUrl}
-                      onChange={(e) => setInstagramUrl(e.target.value)}
-                      placeholder="https://instagram.com/kukusangenz"
-                      className="w-full px-3 py-2 bg-cream-50 rounded-xl border border-brown/15 text-darkbrown text-[11px] focus:outline-none focus:border-brandgreen"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="font-bold text-darkbrown">Link TikTok (Opsional)</label>
-                    <input
-                      type="text"
-                      value={tiktokUrl}
-                      onChange={(e) => setTiktokUrl(e.target.value)}
-                      placeholder="https://tiktok.com/@kukusangenz"
-                      className="w-full px-3 py-2 bg-cream-50 rounded-xl border border-brown/15 text-darkbrown text-[11px] focus:outline-none focus:border-brandgreen"
-                    />
-                  </div>
                 </div>
 
                 <div className="pt-2 flex justify-end">

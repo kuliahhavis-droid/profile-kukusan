@@ -157,8 +157,8 @@ export const INITIAL_SITE_CONTENT = {
     tagline: "Kukusan Sehat, Rasa Hebat",
     logoText: "Kukusan Gen Z",
     whatsappNumber: "628818584749",
-    instagramUrl: "https://instagram.com/kukusangenz",
-    tiktokUrl: "https://tiktok.com/@kukusangenz",
+    instagramUrl: "https://www.instagram.com/kukusangenz._?stkn=N2JhYW85bml3czJu",
+    tiktokUrl: "https://www.tiktok.com/@kukusangenz_?_r=1&_t=ZS-9A8P0eyM0If",
   },
   about: {
     title: "Tentang Kukusan Gen Z",

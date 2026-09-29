@@ -28,8 +28,6 @@ export async function updateIdentityContentAction(data: {
   tagline: string;
   logoText: string;
   whatsappNumber: string;
-  instagramUrl: string;
-  tiktokUrl: string;
 }) {
   try {
     await requireAdminAuth();
