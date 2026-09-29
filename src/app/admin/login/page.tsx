@@ -52,16 +52,16 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
           <div className="space-y-1">
-            <label className="block font-bold text-darkbrown">Email Admin</label>
+            <label className="block font-bold text-darkbrown">Email / Username Admin</label>
             <div className="relative">
               <Mail className="w-4 h-4 text-brown/50 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
-                type="email"
+                type="text"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-9 pr-3 py-2.5 bg-cream-50 rounded-xl border border-brown/15 text-darkbrown font-semibold focus:outline-none focus:border-brandgreen"
-                placeholder="nama@email.com"
+                placeholder="admin@kukusangenz.com atau admin"
               />
             </div>
           </div>
