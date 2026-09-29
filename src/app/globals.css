@@ -1,0 +1,51 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+:root {
+  --color-cream-50: #FAF7F2;
+  --color-cream-100: #F4EFE6;
+  --color-cream-200: #EAE1D2;
+  --color-darkbrown: #2C1A14;
+  --color-brown: #5E4337;
+  --color-brandgreen: #336B3B;
+  --color-brandorange: #C85A17;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream-100);
+  color: var(--color-darkbrown);
+  font-family: var(--font-outfit), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Crisp Clean Glass Panel */
+.glass-header {
+  background: rgba(244, 239, 230, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(44, 26, 20, 0.08);
+}
+
+/* Refined Subtle Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #F4EFE6;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBBBA5;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #826354;
+}
+
