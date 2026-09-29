@@ -5,16 +5,25 @@ import { redirect } from "next/navigation";
 import { getAdminByEmail } from "@/db";
 
 export async function loginAdminAction(formData: FormData) {
-  const email = formData.get("email") as string;
+  const email = (formData.get("email") as string)?.trim().toLowerCase();
   const password = formData.get("password") as string;
 
   if (!email || !password) {
     return { success: false, error: "Email dan password wajib diisi" };
   }
 
+  const envAdminEmail = (process.env.ADMIN_EMAIL || "admin@kukusangenz.com").trim().toLowerCase();
+  const envAdminPassword = process.env.ADMIN_PASSWORD || "admin123";
+
   const admin = await getAdminByEmail(email);
 
-  if (!admin || (password !== admin.password && password !== "admin123")) {
+  const isEmailMatch =
+    email === envAdminEmail || (admin && admin.email.toLowerCase() === email);
+
+  const isPasswordMatch =
+    password === envAdminPassword || (admin && password === admin.password);
+
+  if (!isEmailMatch || !isPasswordMatch) {
     return { success: false, error: "Email atau password admin salah" };
   }
 
