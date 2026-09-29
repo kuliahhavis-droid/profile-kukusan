@@ -48,38 +48,45 @@ export default function AdminContentCMSPage() {
   const [aboutDescription, setAboutDescription] = useState("");
   const [aboutImageUrl, setAboutImageUrl] = useState("");
 
+  const loadContent = async () => {
+    try {
+      const res = await fetch(`/api/content?t=${Date.now()}`);
+      const data = await res.json();
+      const c = data.content;
+      if (c?.identity) {
+        setBrandName(c.identity.brandName || "");
+        setTagline(c.identity.tagline || "");
+        setWhatsappNumber(c.identity.whatsappNumber || "");
+        setInstagramUrl(c.identity.instagramUrl || "");
+        setTiktokUrl(c.identity.tiktokUrl || "");
+      }
+      if (c?.location) {
+        setAddress(c.location.address || "");
+        setOpeningHours(c.location.openingHours || "");
+        setPhone(c.location.phone || "");
+        setMapsEmbedUrl(c.location.mapsEmbedUrl || "");
+      }
+      if (c?.hero) {
+        setHeroTitle(c.hero.title || "");
+        setHeroSubtitle(c.hero.subtitle || "");
+        setHeroBadgeText(c.hero.badgeText || "");
+        setHeroImageUrl(c.hero.heroImageUrl || "");
+      }
+      if (c?.about) {
+        setAboutTitle(c.about.title || "");
+        setAboutSubtitle(c.about.subtitle || "");
+        setAboutDescription(c.about.description || "");
+        setAboutImageUrl(c.about.imageUrl || "");
+      }
+    } catch (e) {
+      console.error("Failed to load content:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetch("/api/content")
-      .then((res) => res.json())
-      .then((data) => {
-        const c = data.content;
-        if (c?.identity) {
-          setBrandName(c.identity.brandName || "");
-          setTagline(c.identity.tagline || "");
-          setWhatsappNumber(c.identity.whatsappNumber || "");
-          setInstagramUrl(c.identity.instagramUrl || "");
-          setTiktokUrl(c.identity.tiktokUrl || "");
-        }
-        if (c?.location) {
-          setAddress(c.location.address || "");
-          setOpeningHours(c.location.openingHours || "");
-          setPhone(c.location.phone || "");
-          setMapsEmbedUrl(c.location.mapsEmbedUrl || "");
-        }
-        if (c?.hero) {
-          setHeroTitle(c.hero.title || "");
-          setHeroSubtitle(c.hero.subtitle || "");
-          setHeroBadgeText(c.hero.badgeText || "");
-          setHeroImageUrl(c.hero.heroImageUrl || "");
-        }
-        if (c?.about) {
-          setAboutTitle(c.about.title || "");
-          setAboutSubtitle(c.about.subtitle || "");
-          setAboutDescription(c.about.description || "");
-          setAboutImageUrl(c.about.imageUrl || "");
-        }
-      })
-      .finally(() => setLoading(false));
+    loadContent();
   }, []);
 
   const handleUploadFile = async (
