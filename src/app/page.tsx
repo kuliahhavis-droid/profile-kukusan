@@ -43,7 +43,6 @@ export default async function HomePage() {
   const testimonialsData = siteContent?.testimonials || [];
   const identityData = siteContent?.identity || {};
   const heroWithIdentity = { ...heroData, whatsappNumber: identityData.whatsappNumber };
-  const locationWithIdentity = { ...locationData, whatsappNumber: identityData.whatsappNumber };
   const locationData = siteContent?.location || {
     address: "Ketapang Kost 2, Dusun III, Dukuhwaluh, Kec. Kembaran, Kabupaten Banyumas, Jawa Tengah (Buka Pagi 06.00 - Habis | Siap Antar UMP 1)",
     weekdayLocation: "H7QG+945, Dusun III, Dukuhwaluh, Kec. Kembaran, Kabupaten Banyumas, Jawa Tengah (di depan Lare Cost_Food Corner)",
@@ -52,6 +51,7 @@ export default async function HomePage() {
     phone: "08818584749",
     mapsEmbedUrl: "https://maps.google.com/maps?q=H7QG%2B945%2C+Dusun+III%2C+Dukuhwaluh%2C+Kec.+Kembaran%2C+Kabupaten+Banyumas%2C+Jawa+Tengah&t=&z=15&ie=UTF8&iwloc=&output=embed",
   };
+  const locationWithIdentity = { ...locationData, whatsappNumber: identityData.whatsappNumber };
 
   return (
     <div className="min-h-screen flex flex-col">
