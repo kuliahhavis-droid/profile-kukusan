@@ -206,9 +206,8 @@ export default function CartDrawer() {
     msg += `📋 *RINCIAN PESANAN:*\n`;
 
     items.forEach((item, idx) => {
-      const itemTotal = calculateItemTotal(item.product, item.quantity, item.toppingPrice || 0);
       msg += `${idx + 1}. *${item.product.name}*\n`;
-      msg += `   • Jumlah: ${item.quantity} pcs (Rp ${itemTotal.toLocaleString("id-ID")})\n`;
+      msg += `   • Jumlah: ${item.quantity} pcs${item.product.price === 2000 ? " (harga promo dihitung gabungan)" : ` (Rp ${(item.product.price * item.quantity).toLocaleString("id-ID")})`}\n`;
       if (item.notes && item.notes.trim()) {
         msg += `   • Catatan Item: _${item.notes.trim()}_\n`;
       }
