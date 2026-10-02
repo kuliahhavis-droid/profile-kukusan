@@ -150,14 +150,14 @@ export default function Navbar({ identity }: { identity?: { brandName?: string; 
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ type: "spring", damping: 28, stiffness: 280 }}
-                className="w-screen max-w-xs sm:max-w-sm bg-cream-50/98 backdrop-blur-xl shadow-2xl flex flex-col border-l border-brown/15 rounded-l-3xl overflow-hidden"
+                className="w-screen max-w-xs sm:max-w-sm bg-white shadow-xl flex flex-col border-l border-brown/15 overflow-hidden"
               >
                 {/* Drawer Header */}
-                <div className="p-5 bg-white/90 backdrop-blur-md border-b border-brown/10 flex items-center justify-between">
+                <div className="p-4 bg-white border-b border-brown/10 flex items-center justify-between">
                   <BrandLogo showTagline={false} brandName={identity?.brandName} tagline={identity?.tagline} />
                   <button
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-8 h-8 rounded-full bg-cream-100 text-brown hover:text-darkbrown hover:bg-cream-200 flex items-center justify-center transition-all active:scale-95"
+                    className="p-2 text-brown hover:text-darkbrown transition-colors active:scale-95"
                     aria-label="Tutup Menu"
                   >
                     <X className="w-4 h-4" />
@@ -165,12 +165,12 @@ export default function Navbar({ identity }: { identity?: { brandName?: string; 
                 </div>
 
                 {/* Drawer Nav Links Body */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                  <p className="text-[10px] font-bold text-brown/50 uppercase tracking-widest px-3 pt-1">
+                <div className="flex-1 overflow-y-auto px-4 py-5">
+                  <p className="text-[10px] font-bold text-brown/50 uppercase tracking-widest px-1 pb-3">
                     Navigasi Cepat
                   </p>
 
-                  <div className="space-y-1.5">
+                  <div>
                     {navLinks.map((link) => {
                       const Icon = link.icon;
                       return (
@@ -178,10 +178,10 @@ export default function Navbar({ identity }: { identity?: { brandName?: string; 
                           key={link.name}
                           href={link.href}
                           onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center justify-between p-3 rounded-2xl bg-white/70 hover:bg-white border border-brown/10 hover:border-brandgreen/30 text-darkbrown shadow-xs hover:shadow-soft transition-all group active:scale-[0.98]"
+                          className="flex items-center justify-between py-3 border-b border-brown/10 hover:bg-cream-50 text-darkbrown transition-colors group"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-xl bg-brandgreen/10 text-brandgreen flex items-center justify-center group-hover:bg-brandgreen group-hover:text-white transition-colors">
+                            <div className="text-brandgreen flex items-center justify-center">
                               <Icon className="w-4 h-4" />
                             </div>
                             <div>
@@ -200,28 +200,16 @@ export default function Navbar({ identity }: { identity?: { brandName?: string; 
                   </div>
 
                   {/* Operational Status Card */}
-                  <div className="mt-4 p-3.5 bg-gradient-to-br from-brandgreen/10 to-brandgreen/5 rounded-2xl border border-brandgreen/20">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="w-2 h-2 rounded-full bg-brandgreen animate-pulse" />
-                      <span className="text-[11px] font-bold text-brandgreen">
-                        Outlet Buka Setiap Hari
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-brown/80 flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-brandgreen flex-shrink-0" />
-                      <span>06.30 - 21.00 WIB (Kukus Hangat)</span>
-                    </p>
-                  </div>
                 </div>
 
                 {/* Drawer Footer CTA */}
-                <div className="p-4 bg-white/95 backdrop-blur-md border-t border-brown/10 space-y-2">
+                <div className="p-4 bg-white border-t border-brown/10 space-y-2">
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
                       setIsOpen(true);
                     }}
-                    className="w-full py-3 px-4 rounded-xl bg-cream-100 hover:bg-cream-200 text-darkbrown font-bold text-xs flex items-center justify-center gap-2 transition-all border border-brown/15 active:scale-95"
+                    className="w-full py-3 px-4 rounded-md bg-cream-100 hover:bg-cream-200 text-darkbrown font-bold text-xs flex items-center justify-center gap-2 transition-colors border border-brown/15 active:scale-95"
                   >
                     <ShoppingBag className="w-4 h-4 text-brandgreen" />
                     <span>Lihat Keranjang {totalItems > 0 ? `(${totalItems})` : ""}</span>
@@ -231,7 +219,7 @@ export default function Navbar({ identity }: { identity?: { brandName?: string; 
                     href={`https://wa.me/${identity?.whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628818584749"}?text=Halo%20Kukusan%20Gen%20Z!%20%F0%9F%8C%BF%20Saya%20mau%20pesan%20aneka%20kukusan%20sehat%20area%20Kampus%20UMP%201.`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-3 px-4 rounded-xl bg-brandgreen hover:bg-brandgreen-hover text-white font-bold text-xs flex items-center justify-center gap-2 shadow-soft transition-all active:scale-95"
+                    className="w-full py-3 px-4 rounded-md bg-brandgreen hover:bg-brandgreen-hover text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors active:scale-95"
                   >
                     <PhoneCall className="w-4 h-4" />
                     <span>Hubungi via WhatsApp</span>

@@ -11,6 +11,37 @@ export interface CartItem {
   notes?: string;
 }
 
+export function calculateItemTotal(product: Product, quantity: number, toppingPrice = 0) {
+  const itemSubtotal =
+    product.price === 2000
+      ? Math.floor(quantity / 3) * 5000 + (quantity % 3) * product.price
+      : product.price * quantity;
+
+  return itemSubtotal + toppingPrice * quantity;
+}
+
+export function calculateCartSubtotal(items: CartItem[]) {
+  let regularQuantity = 0;
+  let regularToppingTotal = 0;
+  let otherItemsTotal = 0;
+
+  items.forEach((item) => {
+    const toppingTotal = (item.toppingPrice || 0) * item.quantity;
+
+    if (item.product.price === 2000) {
+      regularQuantity += item.quantity;
+      regularToppingTotal += toppingTotal;
+    } else {
+      otherItemsTotal += item.product.price * item.quantity + toppingTotal;
+    }
+  });
+
+  const regularItemsTotal =
+    Math.floor(regularQuantity / 3) * 5000 + (regularQuantity % 3) * 2000;
+
+  return regularItemsTotal + regularToppingTotal + otherItemsTotal;
+}
+
 interface CartContextType {
   items: CartItem[];
   addItem: (product: Product, quantity?: number, topping?: string, notes?: string) => void;
@@ -99,10 +130,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  const subtotal = items.reduce((sum, item) => {
-    const itemPrice = item.product.price + (item.toppingPrice || 0);
-    return sum + itemPrice * item.quantity;
-  }, 0);
+  const subtotal = calculateCartSubtotal(items);
 
   // Format WhatsApp order message with clean, professional structure
   const generateWhatsAppMessage = () => {
@@ -112,10 +140,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     msg += `📋 *RINCIAN PESANAN:*\n`;
 
     items.forEach((item, idx) => {
-      const unitPrice = item.product.price + (item.toppingPrice || 0);
-      const itemTotal = unitPrice * item.quantity;
       msg += `${idx + 1}. *${item.product.name}*\n`;
-      msg += `   • Jumlah: ${item.quantity} pcs (Rp ${itemTotal.toLocaleString("id-ID")})\n`;
+      msg += `   • Jumlah: ${item.quantity} pcs${item.product.price === 2000 ? " (harga promo dihitung gabungan)" : ` (Rp ${(item.product.price * item.quantity).toLocaleString("id-ID")})`}\n`;
       if (item.notes && item.notes.trim()) {
         msg += `   • Catatan: _${item.notes.trim()}_\n`;
       }

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Product, Category } from "@/db/schema";
-import { useCart } from "@/context/CartContext";
+import { calculateItemTotal, useCart } from "@/context/CartContext";
 import { Plus, Eye, X, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollReveal, ScrollStaggerContainer, ScrollStaggerItem } from "@/components/ui/ScrollReveal";
@@ -197,7 +197,7 @@ export default function ProductCatalog({ initialProducts }: ProductCatalogProps)
                     onClick={handleAddToCartFromModal}
                     className="flex-1 py-2.5 px-3 sm:px-4 bg-brandgreen hover:bg-brandgreen-hover text-white font-bold text-xs rounded-xl shadow-soft transition-all active:scale-95 text-center"
                   >
-                    Tambah ke Keranjang (Rp {(selectedProduct.price * modalQuantity).toLocaleString("id-ID")})
+                    Tambah ke Keranjang (Rp {calculateItemTotal(selectedProduct, modalQuantity).toLocaleString("id-ID")})
                   </button>
                 </div>
               </div>

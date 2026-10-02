@@ -62,7 +62,9 @@ export default async function HomePage() {
         <ProductCatalog initialProducts={products} categories={categories} />
         <AdvantagesSection advantages={advantagesData} />
         <AboutUsSection about={aboutData} />
-        <TestimonialsSection testimonials={testimonialsData} />
+        {testimonialsData.length > 0 && (
+          <TestimonialsSection testimonials={testimonialsData} />
+        )}
         <LocationSection location={locationWithIdentity} />
       </main>
 

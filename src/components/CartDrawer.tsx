@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useCart } from "@/context/CartContext";
 import {
   X,
@@ -11,6 +11,7 @@ import {
   Send,
   User,
   MapPin,
+  Navigation,
   CreditCard,
   FileText,
   AlertCircle,
@@ -52,6 +53,44 @@ export default function CartDrawer() {
   });
 
   const [errors, setErrors] = useState<{ name?: string; address?: string }>({});
+  const addressInputRef = useRef<HTMLInputElement>(null);
+  const [isLocating, setIsLocating] = useState(false);
+
+  useEffect(() => {
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    if (!apiKey || !addressInputRef.current) return;
+
+    const initializeAutocomplete = () => {
+      const googleMaps = (window as Window & { google?: any }).google;
+      if (!googleMaps?.maps?.places || !addressInputRef.current) return;
+
+      const autocomplete = new googleMaps.maps.places.Autocomplete(addressInputRef.current, {
+        componentRestrictions: { country: "id" },
+        fields: ["formatted_address"],
+      });
+
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        if (place.formatted_address) {
+          setForm((prev) => ({ ...prev, address: place.formatted_address }));
+          setErrors((prev) => ({ ...prev, address: undefined }));
+        }
+      });
+    };
+
+    const existingScript = document.getElementById("google-maps-places-script");
+    if (existingScript) {
+      initializeAutocomplete();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = "google-maps-places-script";
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+    script.async = true;
+    script.onload = initializeAutocomplete;
+    document.head.appendChild(script);
+  }, []);
 
   // Lock body scroll when cart is open
   useEffect(() => {
@@ -89,6 +128,49 @@ export default function CartDrawer() {
     }
   };
 
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setErrors((prev) => ({ ...prev, address: "Browser tidak mendukung lokasi otomatis" }));
+      return;
+    }
+
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        const googleMaps = (window as Window & { google?: any }).google;
+        if (!googleMaps?.maps?.Geocoder) {
+          setErrors((prev) => ({ ...prev, address: "Google Maps belum siap, coba lagi sebentar" }));
+          setIsLocating(false);
+          return;
+        }
+
+        new googleMaps.maps.Geocoder().geocode(
+          { location: { lat: coords.latitude, lng: coords.longitude } },
+          (results: Array<{ formatted_address?: string }> | null, status: string) => {
+            if (status === "OK" && results?.[0]?.formatted_address) {
+              setForm((prev) => ({ ...prev, address: results[0].formatted_address || "" }));
+              setErrors((prev) => ({ ...prev, address: undefined }));
+            } else {
+              setErrors((prev) => ({ ...prev, address: "Alamat tidak ditemukan, silakan tulis manual" }));
+            }
+            setIsLocating(false);
+          }
+        );
+      },
+      (error) => {
+        const message =
+          error.code === 1
+            ? "Izin lokasi ditolak. Aktifkan izin lokasi untuk situs ini dari ikon kunci di address bar."
+            : error.code === 2
+              ? "Lokasi perangkat tidak tersedia. Nyalakan GPS atau periksa koneksi internet."
+              : "Pencarian lokasi terlalu lama. Coba lagi atau tulis alamat manual.";
+        setErrors((prev) => ({ ...prev, address: message }));
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
+
   const validateForm = () => {
     const newErrors: { name?: string; address?: string } = {};
     if (!form.name.trim()) {
@@ -124,8 +206,7 @@ export default function CartDrawer() {
     msg += `📋 *RINCIAN PESANAN:*\n`;
 
     items.forEach((item, idx) => {
-      const unitPrice = item.product.price + (item.toppingPrice || 0);
-      const itemTotal = unitPrice * item.quantity;
+      const itemTotal = calculateItemTotal(item.product, item.quantity, item.toppingPrice || 0);
       msg += `${idx + 1}. *${item.product.name}*\n`;
       msg += `   • Jumlah: ${item.quantity} pcs (Rp ${itemTotal.toLocaleString("id-ID")})\n`;
       if (item.notes && item.notes.trim()) {
@@ -233,7 +314,6 @@ export default function CartDrawer() {
 
                       <div className="space-y-2.5">
                         {items.map((item, idx) => {
-                          const itemPrice = item.product.price + (item.toppingPrice || 0);
                           return (
                             <div
                               key={`${item.product.id}-${item.selectedTopping}-${idx}`}
@@ -258,7 +338,9 @@ export default function CartDrawer() {
                                   </p>
                                 )}
                                 <p className="font-bold text-brandgreen text-xs sm:text-sm mt-0.5">
-                                  Rp {itemPrice.toLocaleString("id-ID")}
+                                  {item.product.price === 2000
+                                    ? "Rp 2.000/pcs (promo gabungan)"
+                                    : `Rp ${(item.product.price + (item.toppingPrice || 0)).toLocaleString("id-ID")}/pcs`}
                                 </p>
                               </div>
 
@@ -337,8 +419,17 @@ export default function CartDrawer() {
                           <MapPin className="w-3.5 h-3.5 text-brandgreen" />
                           Alamat / Lokasi Antar <span className="text-red-500">*</span>
                         </label>
-                        <textarea
-                          rows={2}
+                        <button
+                          type="button"
+                          onClick={handleUseCurrentLocation}
+                          disabled={isLocating}
+                          className="mb-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-brandgreen hover:text-brandgreen-hover disabled:opacity-50"
+                        >
+                          <Navigation className="w-3.5 h-3.5" />
+                          {isLocating ? "Mencari lokasi..." : "Gunakan lokasi saya"}
+                        </button>
+                        <input
+                          ref={addressInputRef}
                           value={form.address}
                           onChange={(e) => handleInputChange("address", e.target.value)}
                           placeholder="Contoh: Kost Ketapang 2 Kamar 104 / Gerbang UMP 1 / Gedung FEB"

@@ -70,7 +70,7 @@ export default function Footer() {
               </li>
               <li>
                 <a href="#location" className="hover:text-white hover:translate-x-1 inline-block transition-all">
-                  Lokasi Kedai
+                  Lokasi
                 </a>
               </li>
             </ul>

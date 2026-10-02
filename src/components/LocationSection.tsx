@@ -29,7 +29,7 @@ export default function LocationSection({ location }: { location: LocationData }
         {/* Header */}
         <ScrollReveal className="text-center max-w-2xl mx-auto space-y-2 mb-8">
           <span className="px-3.5 py-1 rounded-full bg-cream-200 text-brown font-bold text-xs uppercase tracking-wider inline-block">
-            Lokasi Kedai
+            Lokasi
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-darkbrown tracking-tight">
             Lokasi & Jam Operasional
