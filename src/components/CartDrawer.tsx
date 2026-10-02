@@ -55,6 +55,7 @@ export default function CartDrawer() {
   const [errors, setErrors] = useState<{ name?: string; address?: string }>({});
   const addressInputRef = useRef<HTMLInputElement>(null);
   const [isLocating, setIsLocating] = useState(false);
+  const [isMapsReady, setIsMapsReady] = useState(false);
 
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -62,7 +63,10 @@ export default function CartDrawer() {
 
     const initializeAutocomplete = () => {
       const googleMaps = (window as Window & { google?: any }).google;
-      if (!googleMaps?.maps?.places || !addressInputRef.current) return;
+      if (!googleMaps?.maps || !addressInputRef.current) return;
+
+      setIsMapsReady(true);
+      if (!googleMaps.maps.places) return;
 
       const autocomplete = new googleMaps.maps.places.Autocomplete(addressInputRef.current, {
         componentRestrictions: { country: "id" },
@@ -80,7 +84,11 @@ export default function CartDrawer() {
 
     const existingScript = document.getElementById("google-maps-places-script");
     if (existingScript) {
-      initializeAutocomplete();
+      if ((window as Window & { google?: any }).google?.maps) {
+        initializeAutocomplete();
+      } else {
+        existingScript.addEventListener("load", initializeAutocomplete, { once: true });
+      }
       return;
     }
 
@@ -89,6 +97,12 @@ export default function CartDrawer() {
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
     script.async = true;
     script.onload = initializeAutocomplete;
+    script.onerror = () => {
+      setErrors((prev) => ({
+        ...prev,
+        address: "Google Maps gagal dimuat. Periksa API key dan aktifkan Maps JavaScript API.",
+      }));
+    };
     document.head.appendChild(script);
   }, []);
 
@@ -138,8 +152,11 @@ export default function CartDrawer() {
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         const googleMaps = (window as Window & { google?: any }).google;
-        if (!googleMaps?.maps?.Geocoder) {
-          setErrors((prev) => ({ ...prev, address: "Google Maps belum siap, coba lagi sebentar" }));
+        if (!isMapsReady || !googleMaps?.maps?.Geocoder) {
+          setErrors((prev) => ({
+            ...prev,
+            address: "Google Maps belum siap. Pastikan Maps JavaScript API aktif, lalu refresh halaman.",
+          }));
           setIsLocating(false);
           return;
         }
