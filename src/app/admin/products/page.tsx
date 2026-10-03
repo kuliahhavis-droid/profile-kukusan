@@ -319,6 +319,7 @@ export default function AdminProductsPage() {
                             src={product.imageUrl}
                             alt={product.name}
                             fill
+                            sizes="48px"
                             className="object-cover"
                           />
                         </div>
@@ -501,7 +502,7 @@ export default function AdminProductsPage() {
                 </div>
                 {imageUrl && (
                   <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-brown/15 mt-2 bg-cream-100">
-                    <Image src={imageUrl} alt="Preview" fill className="object-cover" />
+                    <Image src={imageUrl} alt="Preview" fill sizes="64px" className="object-cover" />
                   </div>
                 )}
               </div>

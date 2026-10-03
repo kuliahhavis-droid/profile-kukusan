@@ -133,6 +133,7 @@ export default async function AdminDashboardPage() {
                             src={prod.imageUrl}
                             alt={prod.name}
                             fill
+                            sizes="44px"
                             className="object-cover"
                           />
                         </div>

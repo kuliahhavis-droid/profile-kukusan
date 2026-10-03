@@ -449,7 +449,7 @@ export default function AdminContentCMSPage() {
                     </div>
                     {heroImageUrl && (
                       <div className="relative w-28 h-16 rounded-xl overflow-hidden border border-brown/15 mt-2 bg-cream-100">
-                        <Image src={heroImageUrl} alt="Hero Preview" fill className="object-cover" />
+                        <Image src={heroImageUrl} alt="Hero Preview" fill sizes="112px" className="object-cover" />
                       </div>
                     )}
                   </div>
@@ -519,7 +519,7 @@ export default function AdminContentCMSPage() {
                   </div>
                   {aboutImageUrl && (
                     <div className="relative w-28 h-16 rounded-xl overflow-hidden border border-brown/15 mt-2 bg-cream-100">
-                      <Image src={aboutImageUrl} alt="About Preview" fill className="object-cover" />
+                      <Image src={aboutImageUrl} alt="About Preview" fill sizes="112px" className="object-cover" />
                     </div>
                   )}
                 </div>

@@ -49,7 +49,7 @@ export default function TestimonialsSection({ testimonials }: { testimonials: Te
 
               <div className="flex items-center gap-3 pt-4 mt-4 border-t border-brown/10">
                 <div className="relative w-9 h-9 rounded-full overflow-hidden bg-cream-200 border border-brown/10 flex-shrink-0">
-                  <Image src={testi.avatar} alt={testi.name} fill className="object-cover" />
+                  <Image src={testi.avatar} alt={testi.name} fill sizes="36px" className="object-cover" />
                 </div>
                 <div>
                   <h4 className="font-bold text-xs text-darkbrown">{testi.name}</h4>

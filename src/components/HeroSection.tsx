@@ -121,6 +121,7 @@ export default function HeroSection({ hero }: { hero: HeroData }) {
                 alt="Kukusan Gen Z"
                 fill
                 priority
+                sizes="(max-width: 1024px) 100vw, 448px"
                 className="object-cover"
               />
 

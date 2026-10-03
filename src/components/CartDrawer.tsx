@@ -30,8 +30,10 @@ interface CustomerForm {
 const PAYMENT_METHODS = [
   { id: "QRIS", label: "QRIS / E-Wallet", desc: "GoPay, OVO, Dana, ShopeePay" },
   { id: "Tunai", label: "Tunai / COD", desc: "Bayar tunai saat pesanan tiba" },
-  { id: "Transfer", label: "Transfer Bank", desc: "BCA / BRI / Mandiri" },
 ];
+
+const FREE_DELIVERY_MINIMUM = 10000;
+const DELIVERY_FEE = 2000;
 
 export default function CartDrawer() {
   const {
@@ -55,56 +57,8 @@ export default function CartDrawer() {
   const [errors, setErrors] = useState<{ name?: string; address?: string }>({});
   const addressInputRef = useRef<HTMLInputElement>(null);
   const [isLocating, setIsLocating] = useState(false);
-  const [isMapsReady, setIsMapsReady] = useState(false);
-
-  useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-    if (!apiKey || !addressInputRef.current) return;
-
-    const initializeAutocomplete = () => {
-      const googleMaps = (window as Window & { google?: any }).google;
-      if (!googleMaps?.maps || !addressInputRef.current) return;
-
-      setIsMapsReady(true);
-      if (!googleMaps.maps.places) return;
-
-      const autocomplete = new googleMaps.maps.places.Autocomplete(addressInputRef.current, {
-        componentRestrictions: { country: "id" },
-        fields: ["formatted_address"],
-      });
-
-      autocomplete.addListener("place_changed", () => {
-        const place = autocomplete.getPlace();
-        if (place.formatted_address) {
-          setForm((prev) => ({ ...prev, address: place.formatted_address }));
-          setErrors((prev) => ({ ...prev, address: undefined }));
-        }
-      });
-    };
-
-    const existingScript = document.getElementById("google-maps-places-script");
-    if (existingScript) {
-      if ((window as Window & { google?: any }).google?.maps) {
-        initializeAutocomplete();
-      } else {
-        existingScript.addEventListener("load", initializeAutocomplete, { once: true });
-      }
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.id = "google-maps-places-script";
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-    script.async = true;
-    script.onload = initializeAutocomplete;
-    script.onerror = () => {
-      setErrors((prev) => ({
-        ...prev,
-        address: "Google Maps gagal dimuat. Periksa API key dan aktifkan Maps JavaScript API.",
-      }));
-    };
-    document.head.appendChild(script);
-  }, []);
+  const deliveryFee = subtotal >= FREE_DELIVERY_MINIMUM ? 0 : DELIVERY_FEE;
+  const orderTotal = subtotal + deliveryFee;
 
   // Lock body scroll when cart is open
   useEffect(() => {
@@ -151,28 +105,15 @@ export default function CartDrawer() {
     setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        const googleMaps = (window as Window & { google?: any }).google;
-        if (!isMapsReady || !googleMaps?.maps?.Geocoder) {
-          setErrors((prev) => ({
-            ...prev,
-            address: "Google Maps belum siap. Pastikan Maps JavaScript API aktif, lalu refresh halaman.",
-          }));
-          setIsLocating(false);
-          return;
-        }
-
-        new googleMaps.maps.Geocoder().geocode(
-          { location: { lat: coords.latitude, lng: coords.longitude } },
-          (results: Array<{ formatted_address?: string }> | null, status: string) => {
-            if (status === "OK" && results?.[0]?.formatted_address) {
-              setForm((prev) => ({ ...prev, address: results[0].formatted_address || "" }));
-              setErrors((prev) => ({ ...prev, address: undefined }));
-            } else {
-              setErrors((prev) => ({ ...prev, address: "Alamat tidak ditemukan, silakan tulis manual" }));
-            }
-            setIsLocating(false);
-          }
-        );
+        const latitude = coords.latitude.toFixed(6);
+        const longitude = coords.longitude.toFixed(6);
+        const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        setForm((prev) => ({
+          ...prev,
+          address: `Lokasi saat ini: ${latitude}, ${longitude} (${mapsUrl})`,
+        }));
+        setErrors((prev) => ({ ...prev, address: undefined }));
+        setIsLocating(false);
       },
       (error) => {
         const message =
@@ -218,28 +159,27 @@ export default function CartDrawer() {
       console.error("Failed to save customer data", e);
     }
 
-    // Generate clean WhatsApp message
-    let msg = `Halo Kukusan Gen Z! 🌿🍠\nSaya mau pesan aneka kukusan:\n\n`;
-    msg += `📋 *RINCIAN PESANAN:*\n`;
+    let msg = `Halo Kukusan Gen Z, saya ingin memesan:\n\n`;
 
     items.forEach((item, idx) => {
-      msg += `${idx + 1}. *${item.product.name}*\n`;
-      msg += `   • Jumlah: ${item.quantity} pcs${item.product.price === 2000 ? " (harga promo dihitung gabungan)" : ` (Rp ${(item.product.price * item.quantity).toLocaleString("id-ID")})`}\n`;
+      msg += `${idx + 1}. ${item.product.name} x${item.quantity}\n`;
       if (item.notes && item.notes.trim()) {
-        msg += `   • Catatan Item: _${item.notes.trim()}_\n`;
+        msg += `   Catatan: ${item.notes.trim()}\n`;
       }
     });
 
-    msg += `\n📊 *Total Item:* ${totalItems} pcs\n`;
-    msg += `💰 *Total Bayar:* Rp ${subtotal.toLocaleString("id-ID")}\n`;
-    msg += `------------------------------------\n`;
-    msg += `👤 *Nama Pemesan:* ${form.name.trim()}\n`;
-    msg += `📍 *Alamat / Lokasi Antar:* ${form.address.trim()}\n`;
-    msg += `💳 *Metode Pembayaran:* ${form.paymentMethod}\n`;
+    msg += `\nPembayaran:\n`;
+    msg += `Subtotal: Rp ${subtotal.toLocaleString("id-ID")}\n`;
+    msg += `Ongkir area UMP: ${deliveryFee === 0 ? "Gratis" : `Rp ${deliveryFee.toLocaleString("id-ID")}`}\n`;
+    msg += `Total: Rp ${orderTotal.toLocaleString("id-ID")}\n`;
+    msg += `Metode: ${form.paymentMethod}\n`;
+    msg += `\nPengiriman:\n`;
+    msg += `Nama: ${form.name.trim()}\n`;
+    msg += `Alamat: ${form.address.trim()}\n`;
     if (form.keterangan && form.keterangan.trim()) {
-      msg += `📝 *Keterangan:* ${form.keterangan.trim()}\n`;
+      msg += `Catatan: ${form.keterangan.trim()}\n`;
     }
-    msg += `\nMohon konfirmasi dan diproses ya kak. Terima kasih! 🙏✨`;
+    msg += `\nMohon dikonfirmasi. Terima kasih.`;
 
     const waNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "628818584749";
     const url = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
@@ -340,6 +280,7 @@ export default function CartDrawer() {
                                   src={item.product.imageUrl}
                                   alt={item.product.name}
                                   fill
+                                    sizes="56px"
                                   className="object-cover"
                                 />
                               </div>
@@ -526,12 +467,21 @@ export default function CartDrawer() {
                       <span>Total {totalItems} Item</span>
                       <span className="font-semibold text-darkbrown">Rp {subtotal.toLocaleString("id-ID")}</span>
                     </div>
-                    <div className="flex justify-between font-bold text-sm sm:text-base text-darkbrown pt-2 border-t border-dashed border-brown/15">
-                      <span>Subtotal Pesanan</span>
-                      <span className="text-brandgreen font-black">
-                        Rp {subtotal.toLocaleString("id-ID")}
+                    <div className="flex justify-between text-xs text-brown">
+                      <span>Biaya Antar Area UMP</span>
+                      <span className="font-semibold text-darkbrown">
+                        {deliveryFee === 0 ? "Gratis" : `Rp ${deliveryFee.toLocaleString("id-ID")}`}
                       </span>
                     </div>
+                    <div className="flex justify-between font-bold text-sm sm:text-base text-darkbrown pt-2 border-t border-dashed border-brown/15">
+                      <span>Total Pembayaran</span>
+                      <span className="text-brandgreen font-black">
+                        Rp {orderTotal.toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-brown/70 pt-1">
+                      Gratis antar minimal belanja Rp 10.000 • Ongkir Rp 2.000 area UMP
+                    </p>
                   </div>
 
                   <div className="flex gap-2">

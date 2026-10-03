@@ -71,4 +71,5 @@ git push -u origin main
    * `NEXTAUTH_SECRET` = *(Ketik teks acak min 32 karakter)*
    * `ADMIN_EMAIL` = `admin@kukusangenz.com`
    * `ADMIN_PASSWORD` = `admin123`
+   Tombol **Gunakan lokasi saya** memakai Geolocation API bawaan browser, jadi tidak memerlukan Google Maps API key. Pengguna harus memberikan izin lokasi pada browser.
 4. Klik **Deploy**. Website Anda akan aktif dalam 1-2 menit dengan domain gratis `https://nama-projek.vercel.app`.

@@ -26,6 +26,7 @@ export default function BrandLogo({
           src="/logo.jpg"
           alt="Logo Kukusan Gen Z"
           fill
+          sizes="44px"
           className="object-cover"
         />
       </div>
